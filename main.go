@@ -33,15 +33,19 @@ func main() {
 
 	/*-------------*/
 
-	winnersList, err := tasks.GetGovProposalWinners(conn, 60)
+	winnersList, err := tasks.GetGovAllProposalsWinners(conn)
 	if err != nil {
 		log.Fatalf("Error in GetGovProposalWinners: %s", err)
 	}
 	for i := range winnersList {
-		fmt.Printf("\nWinner: %s ==> Reward: %d", winnersList[i].Address, winnersList[i].Rewards)
+		fmt.Printf("\nWinner: %s ==> Reward: %d  on: %s",
+			winnersList[i].Address,
+			winnersList[i].Rewards,
+			winnersList[i].Timestamp)
+		// fmt.Printf("\n\n\thttps://www.mintscan.io/cosmos/txs/%s\n\n", winnersList[i].TxResponse.TxHash)
 	}
-
-	fmt.Println()
+	fmt.Printf("\n\nLength: %d", winnersList.Length())
+	fmt.Printf("\n\n\t\t-------------------------\n\n")
 
 	return
 	/*-------------*/
