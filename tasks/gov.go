@@ -5,7 +5,6 @@ import (
 	"log"
 
 	"github.com/archway-network/testnet-evaluator/configs"
-	"github.com/archway-network/testnet-evaluator/progressbar"
 
 	"github.com/cosmos/cosmos-sdk/types/tx"
 	"github.com/gogo/protobuf/proto"
@@ -44,52 +43,14 @@ func retrieveProposalWinnersFromResponse(response *tx.GetTxsEventResponse) (Winn
 
 func GetGovProposalWinners(conn *grpc.ClientConn, proposalId uint64) (WinnersList, error) {
 
-	var bar progressbar.Bar
-	bar.NewOption(0, int64(configs.Configs.Tasks.Gov.MaxWinners))
+	return GetWinnersByTxEvents(conn, []string{
+		"message.module='governance'",
+		"message.action='/cosmos.gov.v1beta1.MsgVote'", //TODO: Maybe we need to find the proper constant instead
+		fmt.Sprintf("proposal_vote.proposal_id='%d'", proposalId),
+	},
+		configs.Configs.Tasks.Gov.MaxWinners,
+		retrieveProposalWinnersFromResponse)
 
-	var totalProposalWinners WinnersList
-
-	// Since a user might vote couple of times, we need to make sure to get a distinct list of winners
-	offset := uint64(0)
-	for {
-		response, err := GetTxEvents(conn, []string{
-			"message.module='governance'",
-			"message.action='/cosmos.gov.v1beta1.MsgVote'", //TODO: Maybe we need to find the proper constant instead
-			fmt.Sprintf("proposal_vote.proposal_id='%d'", proposalId),
-		},
-			uint64(configs.Configs.Tasks.Gov.MaxWinners),
-			offset)
-
-		if err != nil {
-			return nil, err
-		}
-
-		proposalWinners, err := retrieveProposalWinnersFromResponse(response)
-		if err != nil {
-			log.Fatalf("Error in retrieveProposalWinnersFromResponse: %s", err)
-			// return nil, err
-		}
-
-		totalProposalWinners.Merge(proposalWinners)
-		totalProposalWinners = totalProposalWinners.Distinct()
-
-		offset += uint64(proposalWinners.Length())
-
-		// progress := (float64(totalProposalWinners.Length()) / float64(configs.Configs.Tasks.Gov.MaxWinners)) * 100
-
-		// fmt.Printf("\r\tProgress: %.2f %%", progress)
-		// bar.Play(int64(progress))
-		bar.Play(int64(totalProposalWinners.Length()))
-
-		if proposalWinners.Length() == 0 ||
-			totalProposalWinners.Length() >= configs.Configs.Tasks.Gov.MaxWinners {
-			totalProposalWinners = totalProposalWinners.Trim(configs.Configs.Tasks.Gov.MaxWinners)
-			// fmt.Print("\r\tProgress: 100%                     ")
-			bar.Finish()
-			break
-		}
-	}
-	return totalProposalWinners, nil
 }
 
 func GetGovAllProposalsWinners(conn *grpc.ClientConn) (WinnersList, error) {
