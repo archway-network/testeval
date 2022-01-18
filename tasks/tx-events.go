@@ -2,6 +2,7 @@ package tasks
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -35,6 +36,7 @@ func GetTxEvents(conn *grpc.ClientConn, events []string, limit uint64, offset ui
 
 		if err != nil {
 			// fmt.Printf("\tRetrying [ %d ]...", retry+1)
+			// fmt.Printf("\tErr: %s", err)
 
 			// Ideally we want to retry after getting 502 http error, because sometimes server returns it
 			// but we cannot have it as the protobuf Invoke does not return the status code
@@ -50,6 +52,10 @@ func GetTxEvents(conn *grpc.ClientConn, events []string, limit uint64, offset ui
 
 func GetWinnersByTxEvents(conn *grpc.ClientConn, events []string, maxWinners int,
 	extractorFunc func(response *tx.GetTxsEventResponse) (WinnersList, error)) (WinnersList, error) {
+
+	if maxWinners < 1 {
+		return nil, fmt.Errorf("`max_winners` must be greater than zero")
+	}
 
 	var bar progressbar.Bar
 	bar.NewOption(0, int64(maxWinners))
@@ -77,6 +83,7 @@ func GetWinnersByTxEvents(conn *grpc.ClientConn, events []string, maxWinners int
 		totalWinners = totalWinners.Distinct()
 
 		offset += uint64(thisRoundWinners.Length())
+		// thisRoundWinners.Print()
 
 		bar.Play(int64(totalWinners.Length()))
 
