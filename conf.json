@@ -6,9 +6,10 @@
     "api_call_retry": 20,
     "tasks":{
         "gov": {
-            "max_winners" : 500,
-            "proposals": [57,58,59,60],
+            "max_winners" : 10,
+            "proposals": [59,60,61],
             "reward": 10
         }
     }
+
 }

@@ -5,11 +5,27 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-
-	"github.com/archway-network/testnet-evaluator/types"
 )
 
-var Configs types.Configuration
+type Configuration struct {
+	GrpcServer   string `json:"grpc_server"`
+	UseTLS       bool   `json:"use_tls"`
+	APICallRetry int    `json:"api_call_retry"`
+	TxHashURL    string `json:"tx_hash_url"` // The URL to the block explorer in order to find more details of a transaction via its hash
+
+	Tasks struct {
+		Gov struct {
+			MaxWinners int      `json:"max_winners"` // Max number of winners for this tasks
+			Proposals  []uint64 `json:"proposals"`   // The list of Proposal Ids to be investigated
+			Reward     uint64   `json:"reward"`      // Reward for each winner
+
+		} `json:"gov"`
+	} `json:"tasks"`
+}
+
+var Configs Configuration
+
+/*-------------------------*/
 
 // This function loads the configuration file into the Configs object
 func init() {
@@ -24,6 +40,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+
 }
 
 // This function retrieves the root path of where the binary is being executed

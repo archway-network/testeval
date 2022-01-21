@@ -5,21 +5,19 @@ import (
 	"log"
 
 	"github.com/archway-network/testnet-evaluator/configs"
+	"github.com/archway-network/testnet-evaluator/winners"
 
 	"github.com/cosmos/cosmos-sdk/types/tx"
 	"github.com/gogo/protobuf/proto"
 
-	"github.com/archway-network/testnet-evaluator/types"
 	gov "github.com/cosmos/cosmos-sdk/x/gov/types"
 
 	"google.golang.org/grpc"
 )
 
-func retrieveProposalWinnersFromResponse(response *tx.GetTxsEventResponse) (WinnersList, error) {
-	var winnersList WinnersList
+func retrieveProposalWinnersFromResponse(response *tx.GetTxsEventResponse) (winners.WinnersList, error) {
+	var winnersList winners.WinnersList
 	for i := range response.TxResponses {
-		// fmt.Printf("\n\nTx (%d): %v", response.TxResponses[i].Height, response.TxResponses[i].TxHash)
-		// fmt.Printf("\nTimestamp: %#v", response.TxResponses[i].Timestamp)
 
 		voteMsg := gov.MsgVote{}
 		err := proto.Unmarshal(response.Txs[i].Body.Messages[0].Value, &voteMsg)
@@ -29,7 +27,7 @@ func retrieveProposalWinnersFromResponse(response *tx.GetTxsEventResponse) (Winn
 		}
 
 		winnersList.Append(
-			types.Winner{
+			winners.Winner{
 				Address:    voteMsg.Voter,
 				Rewards:    configs.Configs.Tasks.Gov.Reward,
 				Timestamp:  response.TxResponses[i].Timestamp,
@@ -41,7 +39,7 @@ func retrieveProposalWinnersFromResponse(response *tx.GetTxsEventResponse) (Winn
 
 }
 
-func GetGovProposalWinners(conn *grpc.ClientConn, proposalId uint64) (WinnersList, error) {
+func GetGovProposalWinners(conn *grpc.ClientConn, proposalId uint64) (winners.WinnersList, error) {
 
 	return GetWinnersByTxEvents(conn, []string{
 		"message.module='governance'",
@@ -50,12 +48,11 @@ func GetGovProposalWinners(conn *grpc.ClientConn, proposalId uint64) (WinnersLis
 	},
 		configs.Configs.Tasks.Gov.MaxWinners,
 		retrieveProposalWinnersFromResponse)
-
 }
 
-func GetGovAllProposalsWinners(conn *grpc.ClientConn) (WinnersList, error) {
+func GetGovAllProposalsWinners(conn *grpc.ClientConn) (winners.WinnersList, error) {
 
-	var winnersList WinnersList
+	var winnersList winners.WinnersList
 
 	for i := range configs.Configs.Tasks.Gov.Proposals {
 
@@ -66,7 +63,7 @@ func GetGovAllProposalsWinners(conn *grpc.ClientConn) (WinnersList, error) {
 			return winnersList, err
 		}
 
-		winnersList.Merge(proposalWinnerList)
+		winnersList.MergeWithAggregateRewards(proposalWinnerList)
 	}
 
 	return winnersList, nil

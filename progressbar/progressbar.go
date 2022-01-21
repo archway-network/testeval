@@ -35,10 +35,14 @@ func (bar *Bar) Play(cur int64) {
 	}
 	// last := bar.percent
 	bar.percent = bar.getPercent()
+	if bar.percent < 0 {
+		return
+	}
 	bar.rate = strings.Repeat(bar.graph, int(bar.percent)/2)
 	fmt.Printf("\r[%-50s]%3d%% %8d/%d", bar.rate, bar.percent, bar.cur, bar.total)
 }
 
 func (bar *Bar) Finish() {
+	bar.Play(bar.total)
 	fmt.Println()
 }
