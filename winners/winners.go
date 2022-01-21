@@ -7,7 +7,7 @@ import (
 )
 
 type Winner struct {
-	Address    string          // Wallet Address
+	Address    string          // Account Address
 	Rewards    uint64          // Total Reward of a winner
 	Timestamp  string          // The time of the task done, if applicable
 	TxResponse *sdk.TxResponse // The associated Tx Response with the task, if applicable

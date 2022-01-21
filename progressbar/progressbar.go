@@ -44,5 +44,5 @@ func (bar *Bar) Play(cur int64) {
 
 func (bar *Bar) Finish() {
 	bar.Play(bar.total)
-	fmt.Println()
+	// fmt.Println()
 }

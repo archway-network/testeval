@@ -3,6 +3,7 @@ package validators
 import (
 	"context"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/archway-network/testnet-evaluator/configs"
@@ -44,7 +45,7 @@ func getValidatorsSetByOffset(conn *grpc.ClientConn, offset int, status string) 
 				},
 			})
 		if err != nil {
-			fmt.Printf("\r[%d]", retry+1)
+			fmt.Printf("\r[%d", retry+1)
 			// fmt.Printf("\r\tRetrying [ %d ]...", retry+1)
 			// fmt.Printf("\tErr: %s", err)
 
@@ -113,7 +114,7 @@ func GetValidatorsSigningInfo(conn *grpc.ClientConn, consAddress string) (result
 		response, err := c.SigningInfo(ctx,
 			&slashing.QuerySigningInfoRequest{ConsAddress: consAddress})
 		if err != nil {
-			fmt.Printf("\r[%d]", retry+1)
+			fmt.Printf("\r[%d", retry+1)
 			// fmt.Printf("\r\tRetrying [ %d ]...", retry+1)
 			// fmt.Printf("\tErr: %s", err)
 
@@ -130,39 +131,7 @@ func GetValidatorsSigningInfo(conn *grpc.ClientConn, consAddress string) (result
 }
 
 func GetActiveValidators(conn *grpc.ClientConn) (ValidatorsList, error) {
-
-	fmt.Printf("\nPreparing a list of active validators...\n")
 	return GetValidatorsList(conn, staking.BondStatusBonded)
-}
-
-func GetAllUnjailedValidators(conn *grpc.ClientConn) (ValidatorsList, error) {
-	var list ValidatorsList
-
-	// fmt.Printf("\nPreparing a list of active validators...\n")
-	// allValidators, err := GetValidatorsList(conn)
-	// if err != nil {
-	// 	return list, err
-	// }
-	// var bar progressbar.Bar
-	// bar.NewOption(0, int64(len(allValidators)))
-	// bar.Play(0)
-
-	// fmt.Printf("\nAnalyzing validators signing info...\n")
-	// for i := range allValidators {
-	// 	signingInfo, err := GetValidatorsSigningInfo(conn, allValidators[i].Address)
-	// 	bar.Play(int64(i))
-
-	// 	if err != nil {
-	// 		return list, err
-	// 	}
-	// 	list = append(list, &types.Validator{
-	// 		Address:     allValidators[i].Address,
-	// 		SigningInfo: signingInfo,
-	// 	})
-	// }
-
-	// bar.Finish()
-	return list, nil
 }
 
 // This function retrieves the consensus address from the consensus public key
@@ -188,6 +157,7 @@ func GetValidatorInfoByAddress(conn *grpc.ClientConn, address string) (Validator
 				ValidatorAddr: address,
 			})
 		if err != nil {
+			fmt.Printf("\r[%d", retry+1)
 			// fmt.Printf("\r\tRetrying [ %d ]...", retry+1)
 			// fmt.Printf("\tErr: %s", err)
 
@@ -205,4 +175,13 @@ func GetValidatorInfoByAddress(conn *grpc.ClientConn, address string) (Validator
 		return Validator{response.Validator, signingInfo, consAddr}, nil
 	}
 	return Validator{}, fmt.Errorf("something went wrong")
+}
+
+func (v *Validator) GetAccountAddress() string {
+
+	valAddr, err := sdk.ValAddressFromBech32(v.OperatorAddress)
+	if err != nil {
+		log.Print(err)
+	}
+	return sdk.AccAddress(valAddr).String()
 }

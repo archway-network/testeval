@@ -9,6 +9,14 @@
             "max_winners" : 10,
             "proposals": [59,60,61],
             "reward": 10
+        },
+        "validator_join": {
+            "max_winners" : 10,
+            "reward": 720
+        },
+        "jail_unjail": {
+            "max_winners" : 10,
+            "reward": 720
         }
     }
 
