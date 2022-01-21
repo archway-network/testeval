@@ -17,6 +17,10 @@
         "jail_unjail": {
             "max_winners" : 10,
             "reward": 720
+        },
+        "staking": {
+            "max_winners" : 5,
+            "reward": 480
         }
     }
 

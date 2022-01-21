@@ -29,6 +29,11 @@ type Configuration struct {
 			MaxWinners int    `json:"max_winners"` // Max number of winners for this tasks
 			Reward     uint64 `json:"reward"`      // Reward for each winner
 		} `json:"jail_unjail"`
+
+		Staking struct {
+			MaxWinners int    `json:"max_winners"` // Max number of winners for this tasks
+			Reward     uint64 `json:"reward"`      // Reward for each winner
+		} `json:"staking"`
 	} `json:"tasks"`
 }
 

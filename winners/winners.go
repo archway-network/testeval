@@ -50,6 +50,10 @@ func (w *WinnersList) MergeWithAggregateRewards(newList WinnersList) {
 // This function cuts the end of a list
 func (w WinnersList) Trim(length int) WinnersList {
 
+	if w.Length() == length {
+		return w
+	}
+
 	var trimmedList WinnersList
 	for i := range w.list {
 		trimmedList.Append(w.list[i])

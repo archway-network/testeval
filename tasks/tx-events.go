@@ -36,6 +36,7 @@ func GetTxEvents(conn *grpc.ClientConn, events []string, limit uint64, offset ui
 			})
 
 		if err != nil {
+			fmt.Printf("\r[%d", retry+1)
 			// fmt.Printf("\tRetrying [ %d ]...", retry+1)
 			// fmt.Printf("\tErr: %s", err)
 
