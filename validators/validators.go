@@ -185,3 +185,12 @@ func (v *Validator) GetAccountAddress() string {
 	}
 	return sdk.AccAddress(valAddr).String()
 }
+
+func GetValidatorAddressFromAccountAddr(accAddr string) string {
+
+	accAddrByte, err := sdk.AccAddressFromBech32(accAddr)
+	if err != nil {
+		log.Print(err)
+	}
+	return sdk.ValAddress(accAddrByte).String()
+}

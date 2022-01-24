@@ -2,7 +2,7 @@ package report
 
 import "fmt"
 
-func getHTMLHeader(title string, homePage string) string {
+func getHTMLHeader(title string, titleHtml string, homePage string) string {
 
 	return fmt.Sprintf(`<!doctype html>
 	<html lang="en">
@@ -21,7 +21,7 @@ func getHTMLHeader(title string, homePage string) string {
       </nav>
       <a class="btn btn-outline-primary" href="%s">Home</a>
     </div>
-	`, title, title, homePage)
+	`, title, titleHtml, homePage)
 }
 
 func getHTMLFooter() string {

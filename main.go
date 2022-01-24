@@ -75,11 +75,11 @@ func main() {
 		log.Fatalf("Error: %s", err)
 	}
 
-	allWinners := map[string]*winners.WinnersList{
-		"Active Validator": &validatorsWinnersList,
-		"Jailed Unjailed":  &unjailWinnersList,
-		"Governance":       &govWinnersList,
-		"Staking":          &stakingWinnersList,
+	allWinners := []report.WinnersListReport{
+		{Title: "Active Validator", WinnersList: &validatorsWinnersList, ValidatorOnly: true},
+		{Title: "Jailed Unjailed", WinnersList: &unjailWinnersList, ValidatorOnly: true},
+		{Title: "Governance", WinnersList: &govWinnersList, ValidatorOnly: false},
+		{Title: "Staking", WinnersList: &stakingWinnersList, ValidatorOnly: false},
 	}
 	err = report.GenerateHTML(totalWinnersList, allWinners)
 	if err != nil {

@@ -9,10 +9,17 @@ import (
 	"strings"
 
 	"github.com/archway-network/testnet-evaluator/configs"
+	"github.com/archway-network/testnet-evaluator/validators"
 	"github.com/archway-network/testnet-evaluator/winners"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
 )
+
+type WinnersListReport struct {
+	Title         string
+	WinnersList   *winners.WinnersList
+	ValidatorOnly bool
+}
 
 func init() {
 	err := os.MkdirAll(configs.Configs.Report.OutputDir, os.ModePerm)
@@ -60,7 +67,7 @@ func StoreWinnersCSV(winnersList winners.WinnersList) error {
 // 	"Staking":          &stakingWinnersList,
 // }
 // GenerateHTML(totalWinnersList, allWinners)
-func GenerateHTML(mergedList winners.WinnersList, challenges map[string]*winners.WinnersList) error {
+func GenerateHTML(mergedList winners.WinnersList, challenges []WinnersListReport) error {
 
 	homePagePath, err := filepath.Abs(filepath.Join(configs.Configs.Report.OutputDir, "start.html"))
 	if err != nil {
@@ -74,7 +81,7 @@ func GenerateHTML(mergedList winners.WinnersList, challenges map[string]*winners
 	}
 	localePrint := message.NewPrinter(language.English)
 
-	homePageContent := getHTMLHeader("List of Winners", homePagePath)
+	homePageContent := getHTMLHeader("List of Winners", "<b>List of Winners</b>", homePagePath)
 	var homePageTableRows [][]string
 
 	for i := 0; i < mergedList.Length(); i++ {
@@ -88,24 +95,38 @@ func GenerateHTML(mergedList winners.WinnersList, challenges map[string]*winners
 			return err
 		}
 
-		htmlContent := getHTMLHeader(fmt.Sprintf("Details of the winner: %s", winner.Address), homePagePath)
+		bExplorerLink := fmt.Sprintf(`Details of the winner: <b><a target="_blank" href="%s">%s</a></b>`,
+			fmt.Sprintf(configs.Configs.BlockExplorer.Account, winner.Address),
+			winner.Address)
+
+		htmlContent := getHTMLHeader("Details of the winner", bExplorerLink, homePagePath)
 		tableHeaders := []string{"Challenge", "Reward", "More Info"}
 		var tableRows [][]string
-		for chName := range challenges {
-			index := challenges[chName].FindByAddress(winner.Address)
+		for chIndex := range challenges {
+			index := challenges[chIndex].WinnersList.FindByAddress(winner.Address)
 
 			if index > -1 {
-				chWinner := challenges[chName].GetItem(index)
+				chWinner := challenges[chIndex].WinnersList.GetItem(index)
 
-				row := []string{chName, localePrint.Sprintf("%d", chWinner.Rewards)}
+				row := []string{challenges[chIndex].Title, localePrint.Sprintf("%d", chWinner.Rewards)}
 
+				moreInfo := ""
 				if chWinner.TxResponse != nil {
-					// fmt.Printf("\nRawLog of %s: %v", chName, chWinner.TxResponse)
+					// fmt.Printf("\nRawLog of %s: %v", chIndex, chWinner.TxResponse)
 					// row = append(row, chWinner.TxResponse.RawLog)
-					row = append(row, fmt.Sprintf("%v", chWinner.TxResponse))
-				} else {
-					row = append(row, "")
+					moreInfo += fmt.Sprintf("<pre>%v</pre>", chWinner.TxResponse)
+					if chWinner.TxResponse.TxHash != "" {
+						moreInfo += fmt.Sprintf(`<br /><a target="_blank" href="%s">%s</a>`,
+							fmt.Sprintf(configs.Configs.BlockExplorer.TxHash, chWinner.TxResponse.TxHash),
+							chWinner.TxResponse.TxHash)
+					}
 				}
+				if challenges[chIndex].ValidatorOnly {
+					valAddr := validators.GetValidatorAddressFromAccountAddr(chWinner.Address)
+					moreInfo += fmt.Sprintf(`<br /><a target="_blank" href="%s">View Validator on Block Explorer</a>`,
+						fmt.Sprintf(configs.Configs.BlockExplorer.Validator, valAddr))
+				}
+				row = append(row, moreInfo)
 
 				tableRows = append(tableRows, row)
 			}
@@ -124,6 +145,9 @@ func GenerateHTML(mergedList winners.WinnersList, challenges map[string]*winners
 		// End of Detail page-->
 
 		detailsLink := fmt.Sprintf(`<a href="%s">%s</a>`, detailsPageFilePath, winner.Address)
+		// bExplorerLink = fmt.Sprintf(`<a target="_blank" href="%s">%s</a>`,
+		// 	fmt.Sprintf(configs.Configs.BlockExplorer.Account, winner.Address),
+		// 	winner.Address)
 		homePageTableRows = append(homePageTableRows,
 			[]string{detailsLink, localePrint.Sprintf("%d", winner.Rewards)},
 		)
