@@ -33,6 +33,17 @@ func main() {
 
 	/*-------------*/
 
+	// var myWinner winners.Winner
+	// myWinner.Address = "cosmos155svs6sgxe55rnvs6ghprtqu0mh69kehrn0dqr"
+
+	// _, err = myWinner.Verify(conn)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// return
+
+	/*-------------*/
+
 	var totalWinnersList winners.WinnersList
 
 	fmt.Printf("\nFinding the active validators winners...\n")

@@ -9,6 +9,7 @@ import (
 	"log"
 
 	"github.com/archway-network/testnet-evaluator/configs"
+	"github.com/archway-network/testnet-evaluator/events"
 	"github.com/archway-network/testnet-evaluator/progressbar"
 	"github.com/archway-network/testnet-evaluator/winners"
 	staking "github.com/cosmos/cosmos-sdk/x/staking/types"
@@ -86,7 +87,7 @@ func getListOfDelegatorsTwice(conn *grpc.ClientConn, maxDelegators int, offset u
 	bar.Play(0)
 
 	for {
-		response, err := GetTxEvents(conn,
+		response, err := events.GetTxEvents(conn,
 			[]string{
 				"message.module='staking'",
 				"message.action='/cosmos.staking.v1beta1.MsgDelegate'",
@@ -136,7 +137,7 @@ func getListOfDelegatorsTwice(conn *grpc.ClientConn, maxDelegators int, offset u
 }
 
 func hasRedelegated(conn *grpc.ClientConn, delegatorAddress string) (bool, error) {
-	response, err := GetTxEvents(conn,
+	response, err := events.GetTxEvents(conn,
 		[]string{
 			"message.module='staking'",
 			"message.action='/cosmos.staking.v1beta1.MsgBeginRedelegate'",
@@ -155,7 +156,7 @@ func hasRedelegated(conn *grpc.ClientConn, delegatorAddress string) (bool, error
 }
 
 func hasUndelegated(conn *grpc.ClientConn, delegatorAddress string) (bool, error) {
-	response, err := GetTxEvents(conn,
+	response, err := events.GetTxEvents(conn,
 		[]string{
 			"message.module='staking'",
 			"message.action='/cosmos.staking.v1beta1.MsgUndelegate'",
@@ -174,7 +175,7 @@ func hasUndelegated(conn *grpc.ClientConn, delegatorAddress string) (bool, error
 }
 
 func hasClaimedStakingRewards(conn *grpc.ClientConn, delegatorAddress string) (bool, error) {
-	response, err := GetTxEvents(conn,
+	response, err := events.GetTxEvents(conn,
 		[]string{
 			// "message.module='distribution'",
 			"message.action='/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward'",

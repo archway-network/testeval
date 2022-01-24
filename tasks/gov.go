@@ -41,7 +41,7 @@ func retrieveProposalWinnersFromResponse(response *tx.GetTxsEventResponse) (winn
 
 func GetGovProposalWinners(conn *grpc.ClientConn, proposalId uint64) (winners.WinnersList, error) {
 
-	return GetWinnersByTxEvents(conn, []string{
+	return winners.GetWinnersByTxEvents(conn, []string{
 		"message.module='governance'",
 		"message.action='/cosmos.gov.v1beta1.MsgVote'", //TODO: Maybe we need to find the proper constant instead
 		fmt.Sprintf("proposal_vote.proposal_id='%d'", proposalId),

@@ -2,7 +2,8 @@
     "grpc":{
         "server":"grpc.cosmos.network:443",
         "tls": true,
-        "api_call_retry": 20
+        "api_call_retry": 20,
+        "call_timeout": 30
     },
 
     "block_explorer": {
@@ -10,6 +11,17 @@
         "account":"https://www.mintscan.io/cosmos/account/%s",
         "validator":"https://www.mintscan.io/cosmos/validators/%s",
         "COMMENTED_tx_hash":"https://explorer.constantine-1.archway.tech/transactions/%s"
+    },
+
+    "id_verification":{
+        "input_file":{
+            "path":"/path/to/a/csv/file.csv",
+            "fields":{
+                "email": "email",
+                "kyc_id": "kycID"
+            }
+        },
+        "verifier_account": "cosmos1gjtvly9lel6zskvwtvlg5vhwpu9c9wawmyjhz4"
     },
     
     "tasks":{

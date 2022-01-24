@@ -12,6 +12,7 @@ type Configuration struct {
 		Server       string `json:"server"`
 		TLS          bool   `json:"tls"`
 		APICallRetry int    `json:"api_call_retry"`
+		CallTimeout  int    `json:"call_timeout"`
 	} `json:"grpc"`
 
 	Tasks struct {
@@ -67,6 +68,17 @@ type Configuration struct {
 	Report struct {
 		OutputDir string `json:"output_dir"`
 	} `json:"report"`
+
+	IdVerification struct {
+		InputFile struct {
+			Path   string `json:"path"`
+			Fields struct {
+				Email string `json:"email"`
+				KYCId string `json:"kyc_id"`
+			} `json:"fields"`
+		} `json:"input_file"`
+		VerifierAccount string `json:"verifier_account"`
+	} `json:"id_verification"`
 }
 
 var Configs Configuration

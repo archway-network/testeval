@@ -11,6 +11,7 @@ type Winner struct {
 	Rewards    uint64          // Total Reward of a winner
 	Timestamp  string          // The time of the task done, if applicable
 	TxResponse *sdk.TxResponse // The associated Tx Response with the task, if applicable
+	Verified   bool            // If the ID of this winner account is verified
 }
 
 type hashMapType map[string]int // This map is used for quick search { string: Winner.Address, int: index to the item in the WinnersList.list slice}

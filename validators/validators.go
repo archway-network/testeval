@@ -31,7 +31,7 @@ func getValidatorsSetByOffset(conn *grpc.ClientConn, offset int, status string) 
 
 		c := staking.NewQueryClient(conn)
 
-		ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(configs.Configs.GRPC.CallTimeout))
 		defer cancel()
 
 		response, err := c.Validators(ctx,
@@ -108,7 +108,7 @@ func GetValidatorsSigningInfo(conn *grpc.ClientConn, consAddress string) (result
 
 		c := slashing.NewQueryClient(conn)
 
-		ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(configs.Configs.GRPC.CallTimeout))
 		defer cancel()
 
 		response, err := c.SigningInfo(ctx,
@@ -149,7 +149,7 @@ func GetValidatorInfoByAddress(conn *grpc.ClientConn, address string) (Validator
 
 		c := staking.NewQueryClient(conn)
 
-		ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(configs.Configs.GRPC.CallTimeout))
 		defer cancel()
 
 		response, err := c.Validator(ctx,
