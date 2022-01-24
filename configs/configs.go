@@ -35,6 +35,29 @@ type Configuration struct {
 			Reward     uint64 `json:"reward"`      // Reward for each winner
 		} `json:"staking"`
 	} `json:"tasks"`
+
+	Bech32Prefix struct {
+		Account struct {
+			Address string `json:"address"`
+			PubKey  string `json:"pubkey"`
+		} `json:"account"`
+
+		Validator struct {
+			Address string `json:"address"`
+			PubKey  string `json:"pubkey"`
+		} `json:"validator"`
+
+		Consensus struct {
+			Address string `json:"address"`
+			PubKey  string `json:"pubkey"`
+		} `json:"consensus"`
+	} `json:"bech32_prefix"`
+
+	BlockExplorer struct {
+		TxHash    string `json:"tx_hash"`
+		Account   string `json:"account"`
+		Validator string `json:"validator"`
+	} `json:"block_explorer"`
 }
 
 var Configs Configuration

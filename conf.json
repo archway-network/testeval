@@ -1,14 +1,19 @@
 {
     "grpc_server":"grpc.cosmos.network:443",
-    "tx_hash_url":"https://www.mintscan.io/cosmos/txs/%s",
-    "tx_hash_urlX":"https://explorer.constantine-1.archway.tech/transactions/%s",
+    "block_explorer": {
+        "tx_hash":"https://www.mintscan.io/cosmos/txs/%s",
+        "account":"https://www.mintscan.io/cosmos/account/%s",
+        "validator":"https://www.mintscan.io/cosmos/validators/%s",
+        "COMMENTED_tx_hash":"https://explorer.constantine-1.archway.tech/transactions/%s"
+    },
     "use_tls": true,
     "api_call_retry": 20,
+    
     "tasks":{
         "gov": {
             "max_winners" : 10,
             "proposals": [59,60,61],
-            "reward": 10
+            "reward": 480
         },
         "validator_join": {
             "max_winners" : 10,
@@ -21,6 +26,21 @@
         "staking": {
             "max_winners" : 5,
             "reward": 480
+        }
+    },
+
+    "bech32_prefix" : {
+        "account" :{
+            "address": "cosmos",
+            "pubkey": "cosmospub"
+        },
+        "validator" :{
+            "address": "cosmosvaloper",
+            "pubkey": "cosmosvaloperpub"
+        },
+        "consensus" :{
+            "address": "cosmosvalcons",
+            "pubkey": "cosmosvalconspub"
         }
     }
 
