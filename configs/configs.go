@@ -16,24 +16,28 @@ type Configuration struct {
 
 	Tasks struct {
 		Gov struct {
-			MaxWinners int      `json:"max_winners"` // Max number of winners for this tasks
-			Proposals  []uint64 `json:"proposals"`   // The list of Proposal Ids to be investigated
-			Reward     uint64   `json:"reward"`      // Reward for each winner
+			MaxWinners     int      `json:"max_winners"`     // Max number of winners for this tasks
+			Proposals      []uint64 `json:"proposals"`       // The list of Proposal Ids to be investigated
+			Reward         uint64   `json:"reward"`          // Reward for each winner
+			ValidatorsOnly bool     `json:"validators_only"` // If this task is for Validators only
 		} `json:"gov"`
 
 		ValidatorJoin struct {
-			MaxWinners int    `json:"max_winners"` // Max number of winners for this tasks
-			Reward     uint64 `json:"reward"`      // Reward for each winner
+			MaxWinners     int    `json:"max_winners"`     // Max number of winners for this tasks
+			Reward         uint64 `json:"reward"`          // Reward for each winner
+			ValidatorsOnly bool   `json:"validators_only"` // If this task is for Validators only
 		} `json:"validator_join"`
 
 		JailUnjail struct {
-			MaxWinners int    `json:"max_winners"` // Max number of winners for this tasks
-			Reward     uint64 `json:"reward"`      // Reward for each winner
+			MaxWinners     int    `json:"max_winners"`     // Max number of winners for this tasks
+			Reward         uint64 `json:"reward"`          // Reward for each winner
+			ValidatorsOnly bool   `json:"validators_only"` // If this task is for Validators only
 		} `json:"jail_unjail"`
 
 		Staking struct {
-			MaxWinners int    `json:"max_winners"` // Max number of winners for this tasks
-			Reward     uint64 `json:"reward"`      // Reward for each winner
+			MaxWinners     int    `json:"max_winners"`     // Max number of winners for this tasks
+			Reward         uint64 `json:"reward"`          // Reward for each winner
+			ValidatorsOnly bool   `json:"validators_only"` // If this task is for Validators only
 		} `json:"staking"`
 	} `json:"tasks"`
 
@@ -59,6 +63,10 @@ type Configuration struct {
 		Account   string `json:"account"`
 		Validator string `json:"validator"`
 	} `json:"block_explorer"`
+
+	Report struct {
+		OutputDir string `json:"output_dir"`
+	} `json:"report"`
 }
 
 var Configs Configuration

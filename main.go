@@ -6,7 +6,9 @@ import (
 	"log"
 
 	"github.com/archway-network/testnet-evaluator/configs"
+	"github.com/archway-network/testnet-evaluator/report"
 	"github.com/archway-network/testnet-evaluator/tasks"
+	"github.com/archway-network/testnet-evaluator/winners"
 
 	// sdk "github.com/cosmos/cosmos-sdk/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -31,30 +33,60 @@ func main() {
 
 	/*-------------*/
 
-	// winnersList, err := tasks.GetStakingWinners(conn)
-	// winnersList, err := tasks.GetUnjailedValidatorsWinners(conn)
-	winnersList, err := tasks.GetActiveValidatorsWinners(conn)
-	// winnersList, err := tasks.GetGovAllProposalsWinners(conn)
+	var totalWinnersList winners.WinnersList
+
+	fmt.Printf("\nFinding the active validators winners...\n")
+	validatorsWinnersList, err := tasks.GetActiveValidatorsWinners(conn)
 	if err != nil {
 		log.Fatalf("Error: %s", err)
 	}
-	for i := 0; i < winnersList.Length(); i++ {
-		winner := winnersList.GetItem(i)
-		fmt.Printf("\nWinner: %s ==> Reward: %d  on: %s",
-			winner.Address,
-			winner.Rewards,
-			winner.Timestamp)
-		// fmt.Printf("\n%s\n\n", winner.TxResponse.TxHash)
+	fmt.Printf("\nDone\n")
 
-		// accAddr, err := sdk.AccAddressFromBech32(winner.Address)
-		// if err != nil {
-		// 	panic(err)
-		// }
-		// valAddr := sdk.ValAddress(accAddr).String()
-		// fmt.Printf("\t%s", valAddr)
-		// fmt.Printf("\n\n\thttps://www.mintscan.io/cosmos/txs/%s\n\n", winnersList[i].TxResponse.TxHash)
+	fmt.Printf("\nFinding the jailed-unjailed validators winners...\n")
+	unjailWinnersList, err := tasks.GetUnjailedValidatorsWinners(conn)
+	if err != nil {
+		log.Fatalf("Error: %s", err)
 	}
-	fmt.Printf("\n\nLength: %d", winnersList.Length())
+	fmt.Printf("\nDone\n")
+
+	fmt.Printf("\nFinding the governance winners...\n")
+	govWinnersList, err := tasks.GetGovAllProposalsWinners(conn)
+	if err != nil {
+		log.Fatalf("Error: %s", err)
+	}
+	fmt.Printf("\nDone\n")
+
+	fmt.Printf("\nFinding the staking winners...\n")
+	stakingWinnersList, err := tasks.GetStakingWinners(conn)
+	if err != nil {
+		log.Fatalf("Error: %s", err)
+	}
+	fmt.Printf("\nDone\n")
+
+	fmt.Printf("\nMerging all the winners...\n")
+	totalWinnersList.MergeWithAggregateRewards(stakingWinnersList)
+	totalWinnersList.MergeWithAggregateRewards(unjailWinnersList)
+	totalWinnersList.MergeWithAggregateRewards(govWinnersList)
+	totalWinnersList.MergeWithAggregateRewards(validatorsWinnersList)
+	fmt.Printf("\nDone\n")
+
+	err = report.StoreWinnersCSV(totalWinnersList)
+	if err != nil {
+		log.Fatalf("Error: %s", err)
+	}
+
+	allWinners := map[string]*winners.WinnersList{
+		"Active Validator": &validatorsWinnersList,
+		"Jailed Unjailed":  &unjailWinnersList,
+		"Governance":       &govWinnersList,
+		"Staking":          &stakingWinnersList,
+	}
+	err = report.GenerateHTML(totalWinnersList, allWinners)
+	if err != nil {
+		log.Fatalf("Error: %s", err)
+	}
+
+	fmt.Printf("\n\nTotal winners: %d", totalWinnersList.Length())
 	fmt.Printf("\n\n\t\t-------------------------\n\n")
 }
 
