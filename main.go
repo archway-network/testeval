@@ -60,12 +60,12 @@ func main() {
 
 func Connect() (*grpc.ClientConn, error) {
 
-	if configs.Configs.UseTLS {
+	if configs.Configs.GRPC.TLS {
 		creds := credentials.NewTLS(&tls.Config{})
 		// conn, err = grpc.Dial("grpc.constantine-1.archway.tech:443", grpc.WithTransportCredentials(creds))
-		return grpc.Dial(configs.Configs.GrpcServer, grpc.WithTransportCredentials(creds))
+		return grpc.Dial(configs.Configs.GRPC.Server, grpc.WithTransportCredentials(creds))
 	}
-	return grpc.Dial(configs.Configs.GrpcServer, grpc.WithInsecure())
+	return grpc.Dial(configs.Configs.GRPC.Server, grpc.WithInsecure())
 }
 
 func SetBech32Prefixes() {

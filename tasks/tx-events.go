@@ -16,7 +16,7 @@ import (
 
 func GetTxEvents(conn *grpc.ClientConn, events []string, limit uint64, offset uint64) (response *tx.GetTxsEventResponse, err error) {
 
-	for retry := 0; retry < configs.Configs.APICallRetry; retry++ {
+	for retry := 0; retry < configs.Configs.GRPC.APICallRetry; retry++ {
 
 		c := tx.NewServiceClient(conn)
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)

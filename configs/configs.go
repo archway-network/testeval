@@ -8,10 +8,11 @@ import (
 )
 
 type Configuration struct {
-	GrpcServer   string `json:"grpc_server"`
-	UseTLS       bool   `json:"use_tls"`
-	APICallRetry int    `json:"api_call_retry"`
-	TxHashURL    string `json:"tx_hash_url"` // The URL to the block explorer in order to find more details of a transaction via its hash
+	GRPC struct {
+		Server       string `json:"server"`
+		TLS          bool   `json:"tls"`
+		APICallRetry int    `json:"api_call_retry"`
+	} `json:"grpc"`
 
 	Tasks struct {
 		Gov struct {

@@ -27,7 +27,7 @@ type ValidatorsList []Validator
 
 func getValidatorsSetByOffset(conn *grpc.ClientConn, offset int, status string) (response *staking.QueryValidatorsResponse, err error) {
 
-	for retry := 0; retry < configs.Configs.APICallRetry; retry++ {
+	for retry := 0; retry < configs.Configs.GRPC.APICallRetry; retry++ {
 
 		c := staking.NewQueryClient(conn)
 
@@ -104,7 +104,7 @@ func GetValidatorsList(conn *grpc.ClientConn, status string) (validatorsList Val
 
 func GetValidatorsSigningInfo(conn *grpc.ClientConn, consAddress string) (result slashing.ValidatorSigningInfo, err error) {
 
-	for retry := 0; retry < configs.Configs.APICallRetry; retry++ {
+	for retry := 0; retry < configs.Configs.GRPC.APICallRetry; retry++ {
 
 		c := slashing.NewQueryClient(conn)
 
@@ -145,7 +145,7 @@ func GetConsAddressFromConsPubKey(inKey []byte) string {
 
 func GetValidatorInfoByAddress(conn *grpc.ClientConn, address string) (Validator, error) {
 
-	for retry := 0; retry < configs.Configs.APICallRetry; retry++ {
+	for retry := 0; retry < configs.Configs.GRPC.APICallRetry; retry++ {
 
 		c := staking.NewQueryClient(conn)
 

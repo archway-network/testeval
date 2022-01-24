@@ -1,13 +1,16 @@
 {
-    "grpc_server":"grpc.cosmos.network:443",
+    "grpc":{
+        "server":"grpc.cosmos.network:443",
+        "tls": true,
+        "api_call_retry": 20
+    },
+
     "block_explorer": {
         "tx_hash":"https://www.mintscan.io/cosmos/txs/%s",
         "account":"https://www.mintscan.io/cosmos/account/%s",
         "validator":"https://www.mintscan.io/cosmos/validators/%s",
         "COMMENTED_tx_hash":"https://explorer.constantine-1.archway.tech/transactions/%s"
     },
-    "use_tls": true,
-    "api_call_retry": 20,
     
     "tasks":{
         "gov": {
