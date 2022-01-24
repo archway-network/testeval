@@ -36,10 +36,14 @@ func main() {
 	// var myWinner winners.Winner
 	// myWinner.Address = "cosmos155svs6sgxe55rnvs6ghprtqu0mh69kehrn0dqr"
 
+	// fmt.Println(myWinner)
+
 	// _, err = myWinner.Verify(conn)
 	// if err != nil {
 	// 	panic(err)
 	// }
+
+	// fmt.Println(myWinner)
 	// return
 
 	/*-------------*/
@@ -79,6 +83,13 @@ func main() {
 	totalWinnersList.MergeWithAggregateRewards(unjailWinnersList)
 	totalWinnersList.MergeWithAggregateRewards(govWinnersList)
 	totalWinnersList.MergeWithAggregateRewards(validatorsWinnersList)
+	fmt.Printf("\nDone\n")
+
+	fmt.Printf("\nVerifying the identity of the winners...\n")
+	err = totalWinnersList.VerifyAll(conn)
+	if err != nil {
+		log.Fatalf("Error: %s", err)
+	}
 	fmt.Printf("\nDone\n")
 
 	err = report.StoreWinnersCSV(totalWinnersList)

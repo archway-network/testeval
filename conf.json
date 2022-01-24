@@ -15,10 +15,10 @@
 
     "id_verification":{
         "input_file":{
-            "path":"/path/to/a/csv/file.csv",
+            "path":"./input/us-500.csv",
             "fields":{
                 "email": "email",
-                "kyc_id": "kycID"
+                "kyc_id": "phone1"
             }
         },
         "verifier_account": "cosmos1gjtvly9lel6zskvwtvlg5vhwpu9c9wawmyjhz4"
