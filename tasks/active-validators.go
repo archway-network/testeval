@@ -34,11 +34,26 @@ func GetActiveValidatorsWinners(conn *grpc.ClientConn) (winners.WinnersList, err
 	for i := range activeValidators {
 
 		bar.Play(int64(i))
-		winnersList.Append(
-			winners.Winner{
-				Address: activeValidators[i].GetAccountAddress(),
-				Rewards: configs.Configs.Tasks.ValidatorJoin.Reward,
-			})
+
+		newWinner := winners.Winner{
+			Address: activeValidators[i].GetAccountAddress(),
+			Rewards: configs.Configs.Tasks.ValidatorJoin.Reward,
+		}
+
+		if configs.Configs.IdVerification.Required {
+			verified, err := newWinner.Verify(conn)
+			if err != nil {
+				return winners.WinnersList{}, err
+			}
+			if !verified {
+				continue //ignore the unverified winners
+			}
+		}
+
+		winnersList.Append(newWinner)
+		if winnersList.Length() >= configs.Configs.Tasks.ValidatorJoin.MaxWinners {
+			break // Max winners reached
+		}
 	}
 
 	bar.Finish()

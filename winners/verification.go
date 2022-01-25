@@ -68,6 +68,7 @@ func (w *Winner) Verify(conn *grpc.ClientConn) (bool, error) {
 			foundUserVerificationData.Email == usersVerificationData.Email &&
 			foundUserVerificationData.KYCId == usersVerificationData.KYCId {
 			w.Verified = true
+			w.VerificationData = foundUserVerificationData
 			return true, nil
 		}
 	}

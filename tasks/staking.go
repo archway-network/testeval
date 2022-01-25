@@ -59,10 +59,23 @@ func GetStakingWinners(conn *grpc.ClientConn) (winners.WinnersList, error) {
 			}
 
 			if (redelegated || undelegated) && claimedStakingRewards {
-				winnersList.Append(winners.Winner{
+
+				newWinner := winners.Winner{
 					Address: delegator.Address,
 					Rewards: configs.Configs.Tasks.Staking.Reward,
-				})
+				}
+
+				if configs.Configs.IdVerification.Required {
+					verified, err := newWinner.Verify(conn)
+					if err != nil {
+						return winners.WinnersList{}, err
+					}
+					if !verified {
+						continue //ignore the unverified winners
+					}
+				}
+
+				winnersList.Append(newWinner)
 			}
 		}
 		bar.Finish()

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/archway-network/testnet-evaluator/configs"
 	"github.com/archway-network/testnet-evaluator/events"
 	"github.com/archway-network/testnet-evaluator/progressbar"
 
@@ -36,12 +37,30 @@ func GetWinnersByTxEvents(conn *grpc.ClientConn, listOfEvents []string, maxWinne
 
 		thisRoundWinners, err := extractorFunc(response)
 		if err != nil {
-			log.Fatalf("Error in extractorFunction: %s", err)
-			// return nil, err
+			// log.Fatalf("Error in extractorFunction: %s", err)
+			return WinnersList{}, err
 		}
 
-		// Only new winners add to the list
-		totalWinners.Merge(thisRoundWinners)
+		// <!-- Verification process
+		if configs.Configs.IdVerification.Required {
+
+			fmt.Printf("\nVerifying the identity of the winners...\n")
+			err = thisRoundWinners.VerifyAll(conn)
+			if err != nil {
+				log.Fatalf("Error: %s", err)
+			}
+			fmt.Printf("\nDone\n")
+
+			// Only new winners add to the list
+			totalWinners.Merge(thisRoundWinners.GetVerifiedOnly())
+
+		} else {
+
+			// Only new winners add to the list
+			totalWinners.Merge(thisRoundWinners)
+		}
+
+		// -->
 
 		offset += uint64(thisRoundWinners.Length())
 		// thisRoundWinners.Print()

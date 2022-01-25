@@ -39,7 +39,11 @@ func StoreWinnersCSV(winnersList winners.WinnersList) error {
 	defer f.Close()
 
 	// The headers
-	_, err = f.WriteString("Account,Reward")
+	if configs.Configs.IdVerification.Required {
+		_, err = f.WriteString("Email,Account,Reward")
+	} else {
+		_, err = f.WriteString("Account,Reward")
+	}
 	if err != nil {
 		return err
 	}
@@ -47,7 +51,14 @@ func StoreWinnersCSV(winnersList winners.WinnersList) error {
 	for i := 0; i < winnersList.Length(); i++ {
 		winner := winnersList.GetItem(i)
 
-		redcord := fmt.Sprintf("\n%s,%d", winner.Address, winner.Rewards)
+		var redcord string
+
+		if configs.Configs.IdVerification.Required {
+
+			redcord = fmt.Sprintf("\n%s,%s,%d", winner.VerificationData.Email, winner.Address, winner.Rewards)
+		} else {
+			redcord = fmt.Sprintf("\n%s,%d", winner.Address, winner.Rewards)
+		}
 
 		// the Go CSV package has some issues, it missed some records
 		_, err = f.WriteString(redcord)
@@ -135,6 +146,21 @@ func GenerateHTML(mergedList winners.WinnersList, challenges []WinnersListReport
 		tableFooters := []string{"Total Reward", localePrint.Sprintf("%d", winner.Rewards), ""}
 
 		htmlContent += getHTMLTable(tableHeaders, tableRows, tableFooters)
+
+		//<!-- Verification Info
+
+		if winner.Verified {
+			htmlContent += getHTMLInfoBox("ID Verification", "This participant is verified")
+			htmlContent += getHTMLTable(nil, [][]string{
+				{"Email address", winner.VerificationData.Email},
+				{"KYC ID", winner.VerificationData.KYCId},
+			}, nil)
+		} else {
+			htmlContent += getHTMLWarningBox("ID Verification", "This participant is NOT verified")
+		}
+
+		//-->
+
 		htmlContent += getHTMLFooter()
 
 		err = writeTextToFile(detailsPageFilePath, htmlContent)

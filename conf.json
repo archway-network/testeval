@@ -29,23 +29,19 @@
         "gov": {
             "max_winners" : 10,
             "proposals": [59,60,61],
-            "reward": 480,
-            "validators_only": false
+            "reward": 480          
         },
         "validator_join": {
             "max_winners" : 10,
-            "reward": 720,
-            "validators_only": true
+            "reward": 720
         },
         "jail_unjail": {
             "max_winners" : 10,
-            "reward": 720,
-            "validators_only": true
+            "reward": 720
         },
         "staking": {
             "max_winners" : 5,
-            "reward": 480,
-            "validators_only": false
+            "reward": 480
         }
     },
 

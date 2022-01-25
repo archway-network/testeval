@@ -60,3 +60,15 @@ func getHTMLTable(headers []string, rows [][]string, footers []string) string {
 	out += `</tbody></table></div>`
 	return out
 }
+
+func getHTMLInfoBox(title string, msg string) string {
+	return fmt.Sprintf(`<div class="alert alert-success"><strong>%s</strong>%s</div>`, title, msg)
+}
+
+func getHTMLWarningBox(title string, msg string) string {
+	return fmt.Sprintf(`<div class="alert alert-warning"><strong>%s</strong>%s</div>`, title, msg)
+}
+
+func getHTMLErrorBox(title string, msg string) string {
+	return fmt.Sprintf(`<div class="alert alert-danger"><strong>%s</strong>%s</div>`, title, msg)
+}

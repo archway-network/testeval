@@ -70,24 +70,7 @@ func main() {
 	totalWinnersList.MergeWithAggregateRewards(validatorsWinnersList)
 	fmt.Printf("\nDone\n")
 
-	var verifiedWinners winners.WinnersList
-	if configs.Configs.IdVerification.Required {
-
-		fmt.Printf("\nVerifying the identity of the winners...\n")
-		err = totalWinnersList.VerifyAll(conn)
-		if err != nil {
-			log.Fatalf("Error: %s", err)
-		}
-		fmt.Printf("\nDone\n")
-
-		verifiedWinners = totalWinnersList.GetVerifiedOnly()
-
-	} else {
-
-		verifiedWinners = totalWinnersList
-	}
-
-	err = report.StoreWinnersCSV(verifiedWinners)
+	err = report.StoreWinnersCSV(totalWinnersList)
 	if err != nil {
 		log.Fatalf("Error: %s", err)
 	}
@@ -98,15 +81,12 @@ func main() {
 		{Title: "Governance", WinnersList: &govWinnersList, ValidatorOnly: false},
 		{Title: "Staking", WinnersList: &stakingWinnersList, ValidatorOnly: false},
 	}
-	err = report.GenerateHTML(verifiedWinners, allWinners)
+	err = report.GenerateHTML(totalWinnersList, allWinners)
 	if err != nil {
 		log.Fatalf("Error: %s", err)
 	}
 
 	fmt.Printf("\n\nTotal winners: %d", totalWinnersList.Length())
-	if configs.Configs.IdVerification.Required {
-		fmt.Printf("\n\nVerified winners: %d", verifiedWinners.Length())
-	}
 }
 
 func Connect() (*grpc.ClientConn, error) {
