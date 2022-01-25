@@ -2,7 +2,6 @@ package winners
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/archway-network/testnet-evaluator/configs"
 	"github.com/archway-network/testnet-evaluator/events"
@@ -47,7 +46,7 @@ func GetWinnersByTxEvents(conn *grpc.ClientConn, listOfEvents []string, maxWinne
 			fmt.Printf("\nVerifying the identity of the winners...\n")
 			err = thisRoundWinners.VerifyAll(conn)
 			if err != nil {
-				log.Fatalf("Error: %s", err)
+				return WinnersList{}, err
 			}
 			fmt.Printf("\nDone\n")
 

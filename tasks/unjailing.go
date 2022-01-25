@@ -36,9 +36,9 @@ func GetAllUnjailedValidators(conn *grpc.ClientConn) (validators.ValidatorsList,
 
 			jailedAndUnjailedValidators = append(jailedAndUnjailedValidators,
 				validators.Validator{
-					activeValidators[i].Validator,
-					signingInfo,
-					activeValidators[i].ConsAddress,
+					Validator:            activeValidators[i].Validator,
+					ValidatorSigningInfo: signingInfo,
+					ConsAddress:          activeValidators[i].ConsAddress,
 				},
 			)
 		}

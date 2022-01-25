@@ -44,7 +44,7 @@ func (w *Winner) Verify(conn *grpc.ClientConn) (bool, error) {
 			"message.module='bank'",
 			"message.action='/cosmos.bank.v1beta1.MsgSend'",
 			fmt.Sprintf("message.sender='%s'", w.Address),
-			// fmt.Sprintf("coin_received.receiver='%s'", configs.Configs.IdVerification.VerifierAccount), //TODO: Uncomment it
+			fmt.Sprintf("coin_received.receiver='%s'", configs.Configs.IdVerification.VerifierAccount),
 		}, 100, 0)
 	if err != nil {
 		return false, err
