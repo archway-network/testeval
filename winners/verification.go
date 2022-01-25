@@ -44,7 +44,7 @@ func (w *Winner) Verify(conn *grpc.ClientConn) (bool, error) {
 			"message.module='bank'",
 			"message.action='/cosmos.bank.v1beta1.MsgSend'",
 			fmt.Sprintf("message.sender='%s'", w.Address),
-			fmt.Sprintf("coin_received.receiver='%s'", configs.Configs.IdVerification.VerifierAccount),
+			// fmt.Sprintf("coin_received.receiver='%s'", configs.Configs.IdVerification.VerifierAccount), //TODO: Uncomment it
 		}, 100, 0)
 	if err != nil {
 		return false, err
@@ -58,9 +58,11 @@ func (w *Winner) Verify(conn *grpc.ClientConn) (bool, error) {
 
 	// We extract multiple transactions as the user might re-send a tx to correct a wrong data
 	for i := range response.Txs {
+
 		usersVerificationData, err := extractVerificationDataFromTxMemo(response.Txs[i].Body.Memo)
 		if err != nil {
-			return false, err
+			// If the memo format does not match with what we want, just ignore it
+			continue
 		}
 
 		foundUserVerificationData, err := findVerificationDataByEmail(usersVerificationData.Email)
@@ -177,7 +179,7 @@ func extractVerificationDataFromTxMemo(memo string) (verificationDataType, error
 
 	memoFields := strings.Fields(memo)
 	if len(memoFields) != 2 {
-		return verificationDataType{}, fmt.Errorf("invalid Tx memo format")
+		return verificationDataType{}, fmt.Errorf("invalid Tx memo format: `%s`", memo)
 	}
 	return verificationDataType{
 		Email: memoFields[0],
