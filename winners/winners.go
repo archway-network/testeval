@@ -129,3 +129,16 @@ func (w WinnersList) Print() {
 		)
 	}
 }
+
+/*------------------*/
+
+func (w *WinnersList) GetVerifiedOnly() WinnersList {
+
+	var output WinnersList
+	for i := range w.list {
+		if w.list[i].Verified {
+			output.Append(w.list[i])
+		}
+	}
+	return output
+}

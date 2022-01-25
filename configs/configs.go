@@ -70,6 +70,7 @@ type Configuration struct {
 	} `json:"report"`
 
 	IdVerification struct {
+		Required  bool `json:"required"`
 		InputFile struct {
 			Path   string `json:"path"`
 			Fields struct {
