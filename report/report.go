@@ -71,11 +71,11 @@ func StoreWinnersCSV(winnersList winners.WinnersList) error {
 }
 
 // should be called like this
-// allWinners := map[string]*winners.WinnersList{
-// 	"Active Validator": &validatorsWinnersList,
-// 	"Jailed Unjailed":  &unjailWinnersList,
-// 	"Governance":       &govWinnersList,
-// 	"Staking":          &stakingWinnersList,
+// allWinners := []report.WinnersListReport{
+// 	{Title: "Active Validator", WinnersList: &validatorsWinnersList, ValidatorOnly: true},
+// 	{Title: "Jailed Unjailed", WinnersList: &unjailWinnersList, ValidatorOnly: true},
+// 	{Title: "Governance", WinnersList: &govWinnersList, ValidatorOnly: false},
+// 	{Title: "Staking", WinnersList: &stakingWinnersList, ValidatorOnly: false},
 // }
 // GenerateHTML(totalWinnersList, allWinners)
 func GenerateHTML(mergedList winners.WinnersList, challenges []WinnersListReport) error {
@@ -111,6 +111,21 @@ func GenerateHTML(mergedList winners.WinnersList, challenges []WinnersListReport
 			winner.Address)
 
 		htmlContent := getHTMLHeader("Details of the winner", bExplorerLink, homePagePath)
+
+		//<!-- Verification Info
+
+		if winner.Verified {
+			htmlContent += getHTMLInfoBox("ID Verification:", "This participant is verified.")
+			htmlContent += getHTMLTable([]string{"Identification data", ""}, [][]string{
+				{"Email address", winner.VerificationData.Email},
+				{"KYC ID", winner.VerificationData.KYCId},
+			}, nil)
+		} else {
+			htmlContent += getHTMLWarningBox("ID Verification:", "This participant is NOT verified!")
+		}
+
+		//-->
+
 		tableHeaders := []string{"Challenge", "Reward", "More Info"}
 		var tableRows [][]string
 		for chIndex := range challenges {
@@ -146,21 +161,6 @@ func GenerateHTML(mergedList winners.WinnersList, challenges []WinnersListReport
 		tableFooters := []string{"Total Reward", localePrint.Sprintf("%d", winner.Rewards), ""}
 
 		htmlContent += getHTMLTable(tableHeaders, tableRows, tableFooters)
-
-		//<!-- Verification Info
-
-		if winner.Verified {
-			htmlContent += getHTMLInfoBox("ID Verification", "This participant is verified")
-			htmlContent += getHTMLTable(nil, [][]string{
-				{"Email address", winner.VerificationData.Email},
-				{"KYC ID", winner.VerificationData.KYCId},
-			}, nil)
-		} else {
-			htmlContent += getHTMLWarningBox("ID Verification", "This participant is NOT verified")
-		}
-
-		//-->
-
 		htmlContent += getHTMLFooter()
 
 		err = writeTextToFile(detailsPageFilePath, htmlContent)
