@@ -34,6 +34,11 @@ var verificationData map[string]verificationDataType
 // If the existing data matches with the account holder is sent, the account is verified
 func (w *Winner) Verify(conn *grpc.ClientConn) (bool, error) {
 
+	// Check the cache first
+	if verified, found := readVerificationCache(w.Address); found {
+		return verified, nil
+	}
+
 	response, err := events.GetTxEvents(conn,
 		[]string{
 			"message.module='bank'",
@@ -69,13 +74,32 @@ func (w *Winner) Verify(conn *grpc.ClientConn) (bool, error) {
 			foundUserVerificationData.KYCId == usersVerificationData.KYCId {
 			w.Verified = true
 			w.VerificationData = foundUserVerificationData
+			addToVerificationCache(w.Address, true)
 			return true, nil
 		}
 	}
 
-	fmt.Printf("\nTotal: %d\n", len(response.Txs))
+	addToVerificationCache(w.Address, false)
 	return false, nil
 }
+
+/*-------------*/
+
+var verificationCache map[string]bool // to cache the verification results
+func addToVerificationCache(address string, verified bool) {
+
+	if verificationCache == nil {
+		verificationCache = make(map[string]bool)
+	}
+	verificationCache[address] = verified
+}
+
+func readVerificationCache(address string) (bool, bool) {
+	verified, found := verificationCache[address]
+	return verified, found
+}
+
+/*-------------*/
 
 func loadVerificationData() (map[string]verificationDataType, error) {
 
