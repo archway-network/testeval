@@ -70,15 +70,16 @@ type Configuration struct {
 	} `json:"report"`
 
 	IdVerification struct {
-		Required  bool `json:"required"`
-		InputFile struct {
-			Path   string `json:"path"`
+		Required   bool `json:"required"`    // If it is required to do an ID verification and filter out the not-verified users
+		HTMLReport bool `json:"html_report"` // If the ID verification data should be shown in the HTML report
+		InputFile  struct {
+			Path   string `json:"path"` // Path to the CSV file containing the verification data
 			Fields struct {
 				Email string `json:"email"`
 				KYCId string `json:"kyc_id"`
 			} `json:"fields"`
 		} `json:"input_file"`
-		VerifierAccount string `json:"verifier_account"`
+		VerifierAccount string `json:"verifier_account"` // An account that all ID verification tx is sent to (in its Memo field)
 	} `json:"id_verification"`
 }
 

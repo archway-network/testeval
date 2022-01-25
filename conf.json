@@ -14,7 +14,8 @@
     },
 
     "id_verification":{
-        "required": true,
+        "required": false,
+        "html_report": true,
         "input_file":{
             "path":"./input/us-500.csv",
             "fields":{

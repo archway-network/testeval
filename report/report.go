@@ -113,17 +113,17 @@ func GenerateHTML(mergedList winners.WinnersList, challenges []WinnersListReport
 		htmlContent := getHTMLHeader("Details of the winner", bExplorerLink, homePagePath)
 
 		//<!-- Verification Info
-
-		if winner.Verified {
-			htmlContent += getHTMLInfoBox("ID Verification:", "This participant is verified.")
-			htmlContent += getHTMLTable([]string{"Identification data", ""}, [][]string{
-				{"Email address", winner.VerificationData.Email},
-				{"KYC ID", winner.VerificationData.KYCId},
-			}, nil)
-		} else {
-			htmlContent += getHTMLWarningBox("ID Verification:", "This participant is NOT verified!")
+		if configs.Configs.IdVerification.HTMLReport {
+			if winner.Verified {
+				htmlContent += getHTMLInfoBox("ID Verification:", "This participant is verified.")
+				htmlContent += getHTMLTable([]string{"Identification data", ""}, [][]string{
+					{"Email address", winner.VerificationData.Email},
+					{"KYC ID", winner.VerificationData.KYCId},
+				}, nil)
+			} else {
+				htmlContent += getHTMLWarningBox("ID Verification:", "This participant is NOT verified!")
+			}
 		}
-
 		//-->
 
 		tableHeaders := []string{"Challenge", "Reward", "More Info"}

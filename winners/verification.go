@@ -56,7 +56,7 @@ func (w *Winner) Verify(conn *grpc.ClientConn) (bool, error) {
 		return false, nil
 	}
 
-	// We extract multiple transactions as the user might re-send a tx to correct a wrong data
+	// We extract multiple transactions as the user might re-send another tx to correct a previousely sent wrong data
 	for i := range response.Txs {
 
 		usersVerificationData, err := extractVerificationDataFromTxMemo(response.Txs[i].Body.Memo)
