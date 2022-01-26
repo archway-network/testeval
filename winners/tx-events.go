@@ -3,9 +3,9 @@ package winners
 import (
 	"fmt"
 
-	"github.com/archway-network/testnet-evaluator/configs"
-	"github.com/archway-network/testnet-evaluator/events"
-	"github.com/archway-network/testnet-evaluator/progressbar"
+	"github.com/archway-network/testeval/configs"
+	"github.com/archway-network/testeval/events"
+	"github.com/archway-network/testeval/progressbar"
 
 	"github.com/cosmos/cosmos-sdk/types/tx"
 	"google.golang.org/grpc"

@@ -14,7 +14,7 @@
     },
 
     "id_verification":{
-        "required": true,
+        "required": false,
         "html_report": true,
         "input_file":{
             "path":"./input/us-500.csv",
@@ -28,20 +28,24 @@
     
     "tasks":{
         "gov": {
-            "max_winners" : 2,
+            "max_winners" : 10,
             "proposals": [59,60,61],
             "reward": 480          
         },
         "validator_join": {
-            "max_winners" : 2,
+            "max_winners" : 10,
             "reward": 720
         },
+        "validator_run": {
+            "max_winners" : 10,
+            "reward": 480
+        },
         "jail_unjail": {
-            "max_winners" : 2,
+            "max_winners" : 10,
             "reward": 720
         },
         "staking": {
-            "max_winners" : 1,
+            "max_winners" : 10,
             "reward": 480
         }
     },

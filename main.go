@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/archway-network/testnet-evaluator/configs"
-	"github.com/archway-network/testnet-evaluator/report"
-	"github.com/archway-network/testnet-evaluator/tasks"
-	"github.com/archway-network/testnet-evaluator/winners"
+	"github.com/archway-network/testeval/configs"
+	"github.com/archway-network/testeval/report"
+	"github.com/archway-network/testeval/tasks"
+	"github.com/archway-network/testeval/winners"
 
 	// sdk "github.com/cosmos/cosmos-sdk/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"

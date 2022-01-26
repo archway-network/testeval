@@ -7,9 +7,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/archway-network/testnet-evaluator/configs"
-	"github.com/archway-network/testnet-evaluator/events"
-	"github.com/archway-network/testnet-evaluator/progressbar"
+	"github.com/archway-network/testeval/configs"
+	"github.com/archway-network/testeval/events"
+	"github.com/archway-network/testeval/progressbar"
 
 	// staking "github.com/cosmos/cosmos-sdk/x/staking/types"
 	// "github.com/gogo/protobuf/proto"

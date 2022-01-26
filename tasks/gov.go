@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/archway-network/testnet-evaluator/configs"
-	"github.com/archway-network/testnet-evaluator/winners"
+	"github.com/archway-network/testeval/configs"
+	"github.com/archway-network/testeval/winners"
 
 	"github.com/cosmos/cosmos-sdk/types/tx"
 	"github.com/gogo/protobuf/proto"

@@ -3,10 +3,10 @@ package tasks
 import (
 	"fmt"
 
-	"github.com/archway-network/testnet-evaluator/configs"
-	"github.com/archway-network/testnet-evaluator/progressbar"
-	"github.com/archway-network/testnet-evaluator/validators"
-	"github.com/archway-network/testnet-evaluator/winners"
+	"github.com/archway-network/testeval/configs"
+	"github.com/archway-network/testeval/progressbar"
+	"github.com/archway-network/testeval/validators"
+	"github.com/archway-network/testeval/winners"
 	"google.golang.org/grpc"
 )
 

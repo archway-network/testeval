@@ -8,9 +8,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/archway-network/testnet-evaluator/configs"
-	"github.com/archway-network/testnet-evaluator/validators"
-	"github.com/archway-network/testnet-evaluator/winners"
+	"github.com/archway-network/testeval/configs"
+	"github.com/archway-network/testeval/validators"
+	"github.com/archway-network/testeval/winners"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
 )

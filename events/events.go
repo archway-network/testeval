@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/archway-network/testnet-evaluator/configs"
+	"github.com/archway-network/testeval/configs"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/cosmos/cosmos-sdk/types/tx"
 	"google.golang.org/grpc"

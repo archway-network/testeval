@@ -23,11 +23,17 @@ type Configuration struct {
 			ValidatorsOnly bool     `json:"validators_only"` // If this task is for Validators only
 		} `json:"gov"`
 
-		ValidatorJoin struct {
+		ValidatorJoin struct { // Active validators
 			MaxWinners     int    `json:"max_winners"`     // Max number of winners for this tasks
 			Reward         uint64 `json:"reward"`          // Reward for each winner
 			ValidatorsOnly bool   `json:"validators_only"` // If this task is for Validators only
 		} `json:"validator_join"`
+
+		ValidatorRun struct { // The participants who just run the validator (it could be inactive)
+			MaxWinners     int    `json:"max_winners"`     // Max number of winners for this tasks
+			Reward         uint64 `json:"reward"`          // Reward for each winner
+			ValidatorsOnly bool   `json:"validators_only"` // If this task is for Validators only
+		} `json:"validator_run"`
 
 		JailUnjail struct {
 			MaxWinners     int    `json:"max_winners"`     // Max number of winners for this tasks

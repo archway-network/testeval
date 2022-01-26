@@ -3,17 +3,17 @@ package tasks
 import (
 	"fmt"
 
-	"github.com/archway-network/testnet-evaluator/configs"
-	"github.com/archway-network/testnet-evaluator/progressbar"
-	"github.com/archway-network/testnet-evaluator/validators"
-	"github.com/archway-network/testnet-evaluator/winners"
+	"github.com/archway-network/testeval/configs"
+	"github.com/archway-network/testeval/progressbar"
+	"github.com/archway-network/testeval/validators"
+	"github.com/archway-network/testeval/winners"
 	"google.golang.org/grpc"
 )
 
 func GetAllUnjailedValidators(conn *grpc.ClientConn) (validators.ValidatorsList, error) {
 	var jailedAndUnjailedValidators validators.ValidatorsList
 
-	activeValidators, err := GetActiveValidators(conn)
+	activeValidators, err := validators.GetActiveValidators(conn)
 	if err != nil {
 		return validators.ValidatorsList{}, err
 	}

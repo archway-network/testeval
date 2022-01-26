@@ -6,8 +6,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/archway-network/testnet-evaluator/configs"
-	"github.com/archway-network/testnet-evaluator/progressbar"
+	"github.com/archway-network/testeval/configs"
+	"github.com/archway-network/testeval/progressbar"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"

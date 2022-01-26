@@ -1,4 +1,4 @@
-module github.com/archway-network/testnet-evaluator
+module github.com/archway-network/testeval
 
 go 1.17
 
