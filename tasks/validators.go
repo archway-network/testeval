@@ -10,17 +10,30 @@ import (
 	"google.golang.org/grpc"
 )
 
-func GetActiveValidators(conn *grpc.ClientConn) (validators.ValidatorsList, error) {
-
-	fmt.Printf("\nPreparing a list of active validators...\n")
-	return validators.GetActiveValidators(conn)
-}
-
 func GetActiveValidatorsWinners(conn *grpc.ClientConn) (winners.WinnersList, error) {
 
-	var winnersList winners.WinnersList
+	return GetValidatorsWinners(conn, true)
+}
 
-	activeValidators, err := GetActiveValidators(conn)
+func GetAllValidatorsWinners(conn *grpc.ClientConn) (winners.WinnersList, error) {
+
+	return GetValidatorsWinners(conn, false)
+}
+
+func GetValidatorsWinners(conn *grpc.ClientConn, onlyActiveValidators bool) (winners.WinnersList, error) {
+
+	var winnersList winners.WinnersList
+	var listOfValidators validators.ValidatorsList
+	var err error
+
+	if onlyActiveValidators {
+		fmt.Printf("\nPreparing a list of Active Validators...\n")
+		listOfValidators, err = validators.GetActiveValidators(conn)
+	} else {
+		fmt.Printf("\nPreparing a list of Inactive Validators...\n")
+		listOfValidators, err = validators.GetInactiveValidators(conn)
+	}
+
 	if err != nil {
 		return winners.WinnersList{}, err
 	}
@@ -28,15 +41,15 @@ func GetActiveValidatorsWinners(conn *grpc.ClientConn) (winners.WinnersList, err
 	fmt.Printf("\nCalculating rewards...\n")
 
 	var bar progressbar.Bar
-	bar.NewOption(0, int64(len(activeValidators)))
+	bar.NewOption(0, int64(len(listOfValidators)))
 	bar.Play(0)
 
-	for i := range activeValidators {
+	for i := range listOfValidators {
 
 		bar.Play(int64(i))
 
 		newWinner := winners.Winner{
-			Address: activeValidators[i].GetAccountAddress(),
+			Address: listOfValidators[i].GetAccountAddress(),
 			Rewards: configs.Configs.Tasks.ValidatorJoin.Reward,
 		}
 

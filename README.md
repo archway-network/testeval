@@ -1,2 +1,4 @@
-# testnet-evaluator
-This piece of code attempts to evaluate a number of tasks of the incentivized testnet
+# TestEval
+`testeval` evaluates a number of predefined tasks of an incentivized testnet.
+
+

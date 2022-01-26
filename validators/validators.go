@@ -134,6 +134,10 @@ func GetActiveValidators(conn *grpc.ClientConn) (ValidatorsList, error) {
 	return GetValidatorsList(conn, staking.BondStatusBonded)
 }
 
+func GetInactiveValidators(conn *grpc.ClientConn) (ValidatorsList, error) {
+	return GetValidatorsList(conn, staking.BondStatusUnbonded)
+}
+
 // This function retrieves the consensus address from the consensus public key
 func GetConsAddressFromConsPubKey(inKey []byte) string {
 
